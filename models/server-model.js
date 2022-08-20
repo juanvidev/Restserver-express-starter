@@ -19,7 +19,13 @@ class Server {
     }
 
     async conectDB() {
-        await conectionDB();
+        try {
+
+            await conectionDB();
+
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     middlewares() {
