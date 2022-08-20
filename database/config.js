@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { createFakeData } = require('../helpers/faker-database');
+// const { createFakeData } = require('../helpers/faker-database');
 
 const conectionDB = async () => {
     try {
