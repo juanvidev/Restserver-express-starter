@@ -46,7 +46,7 @@ router.patch("/", patchUsers);
 router.delete("/:id", [
     validateJWT,
     validateRole('ADMIN_ROLE', 'VENTAS_ROLE'),
-    // check("id").custom(validatorStateUser),
+    check("id").custom(validatorStateUser),
     check('id', 'Id is not valid').isMongoId(),
     check("id").custom(validatorIdDB),
     validateFields
