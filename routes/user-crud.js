@@ -14,7 +14,8 @@ const {
 const {
     validatorRoleDB,
     validatorEmailDB,
-    validatorIdDB } = require('../helpers/db-validators');
+    validatorIdDB,
+    validatorStateUser } = require('../helpers/db-validators');
 
 
 const router = Router();
