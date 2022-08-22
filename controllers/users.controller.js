@@ -8,6 +8,7 @@ const getUsers = async (req, res = response) => {
     const limitFormat = Number(limit);
     const sinceFormat = Number(since);
     const query = { state: true };
+    const payload = req.payload;
 
     if (!limitFormat && !sinceFormat) return res.status(400)
         .json({
@@ -24,7 +25,7 @@ const getUsers = async (req, res = response) => {
 
         ])
 
-        res.json({ countUsers, users });
+        res.json({ countUsers, users, payload });
 
     } catch (error) {
         res.status(500).json({ err: error.message });
@@ -36,13 +37,14 @@ const postUsers = async (req, res = response) => {
 
     const { name, email, password, role } = req.body;
     const user = new User({ name, email, password, role });
+    const payload = req.payload;
 
     user.password = Encrypt(password);
 
     try {
         await user.save();
 
-        res.json({ user });
+        res.json({ user, payload });
 
     } catch (error) {
         console.log(error);
@@ -55,6 +57,7 @@ const postUsers = async (req, res = response) => {
 const putUsers = async (req, res = response) => {
     const { id } = req.params;
     const { _id, google, password, email, ...restUser } = req.body;
+    const payload = req.payload;
 
     if (password) {
         restUser.password = Encrypt(password);
@@ -62,7 +65,7 @@ const putUsers = async (req, res = response) => {
 
     try {
         const userUpdated = await User.findByIdAndUpdate(id, restUser);
-        res.json({ userUpdated });
+        res.json({ userUpdated, payload });
 
     } catch (error) {
         console.log(error);
@@ -84,10 +87,13 @@ const patchUsers = (req, res = response) => {
 const deleteUsers = async (req, res = response) => {
 
     const { id } = req.params;
+    const { userLogged, payload } = req.userLogged;
+
     try {
+
         const userToDelete = await User.findByIdAndUpdate(id, { state: false });
 
-        res.json(userToDelete);
+        res.json({ userToDelete, userLogged, payload });
 
     } catch (error) {
         console.log(error);
