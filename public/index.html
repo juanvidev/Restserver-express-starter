@@ -5,11 +5,68 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access denied</title>
+    <link rel="stylesheet" href="index.css" />
+    <title>Google sign in</title>
 </head>
 
 <body>
-    <h1>Access denied</h1>
+    <div class="container">
+
+        <h1>Google sign in</h1>
+
+        <div id="g_id_onload" data-client_id="962035026024-n8dsedg2dmcq1012lmftcl4ka77ua9eb.apps.googleusercontent.com"
+            data-callback="handleCredentialResponse" data-auto_prompt="false">
+        </div>
+        <div class="g_id_signin" data-type="standard" data-size="large" data-theme="outline" data-text="sign_in_with"
+            data-shape="rectangular" data-logo_alignment="left">
+        </div>
+
+        <button id="btn-google-signout" class="btn-signout">Sign out</button>
+    </div>
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+        const buttonSignOut = document.getElementById('btn-google-signout');
+
+        function handleCredentialResponse(response) {
+            const body = {
+                gle_token: response.credential
+            }
+            fetch('http://localhost:8081/api/auth/google', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                })
+                .then((res) => res.json())
+                .then((res) => {
+                    localStorage.setItem('email', res.user.email);
+                    location.reload();
+                })
+                .catch(console.warn)
+
+        }
+
+        buttonSignOut.addEventListener('click', async () => {
+            google.accounts.id.disableAutoSelect();
+            google.accounts.id.revoke(localStorage.getItem('email'), (done) => {
+                localStorage.clear();
+                location.reload();
+            })
+        });
+
+
+        // buttonSignOut.onclick = async () => {
+        //     google.accounts.id.disableAutoSelect();
+        //     google.accounts.id.revoke(localStorage.getItem('email'), (done) => {
+        //         localStorage.clear();
+        //         buttonSignOut.disabled = true;
+        //         location.reload();
+        //     });
+
+        // }
+    </script>
 </body>
 
 </html>

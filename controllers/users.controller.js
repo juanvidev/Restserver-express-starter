@@ -1,6 +1,6 @@
 const { response } = require('express');
 const { Encrypt } = require('../helpers/encrypt-pass');
-const User = require('../models/db-user');
+const UserModel = require('../models/db-user');
 
 const getUsers = async (req, res = response) => {
     const { limit = 5, since = 0 } = req.query;
@@ -18,8 +18,8 @@ const getUsers = async (req, res = response) => {
     try {
 
         const [countUsers, users] = await Promise.all([
-            User.countDocuments(query),
-            User.find(query)
+            UserModel.countDocuments(query),
+            UserModel.find(query)
                 .skip(sinceFormat)
                 .limit(limitFormat)
 
@@ -36,7 +36,7 @@ const getUsers = async (req, res = response) => {
 const postUsers = async (req, res = response) => {
 
     const { name, email, password, role } = req.body;
-    const user = new User({ name, email, password, role });
+    const user = new UserModel({ name, email, password, role });
     const payload = req.payload;
 
     user.password = Encrypt(password);
@@ -64,7 +64,7 @@ const putUsers = async (req, res = response) => {
     }
 
     try {
-        const userUpdated = await User.findByIdAndUpdate(id, restUser);
+        const userUpdated = await UserModel.findByIdAndUpdate(id, restUser);
         res.json({ userUpdated, payload });
 
     } catch (error) {
@@ -91,7 +91,7 @@ const deleteUsers = async (req, res = response) => {
 
     try {
 
-        const userToDelete = await User.findByIdAndUpdate(id, { state: false });
+        const userToDelete = await UserModel.findByIdAndUpdate(id, { state: false });
 
         res.json({ userToDelete, userLogged, payload });
 
