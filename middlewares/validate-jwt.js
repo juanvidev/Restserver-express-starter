@@ -23,12 +23,12 @@ const validateJWT = async (req = request, res, next) => {
         })
 
         req.userLogged = {
-            userLogged,
-            payload: {
-                uid: payload.id,
-                createdAt: formatDate(payload.iat),
-                expiresIn: formatDate(payload.exp)
-            }
+            _id: userLogged._id,
+            role: userLogged.role,
+            name: userLogged.name,
+            email: userLogged.email,
+            createdAt: formatDate(payload.iat),
+            expiresIn: formatDate(payload.exp)
         };
 
         next();

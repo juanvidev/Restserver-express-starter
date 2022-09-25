@@ -39,10 +39,8 @@ router.delete("/:id", [
     validateFields
 ], deleteUsers);
 
-router.all("*", (req, res) => {
-    res.json({
-        message: '404 | Not found'
-    })
-});
+router.all("*", (req, res) => res.status(404).json({
+    message: '404 | Not found'
+}));
 
 module.exports = router;

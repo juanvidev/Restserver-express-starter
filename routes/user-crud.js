@@ -15,7 +15,7 @@ const {
     validatorRoleDB,
     validatorEmailDB,
     validatorIdDB,
-    validatorStateUser } = require('../helpers/db-validators');
+} = require('../helpers/db-validators');
 
 
 const router = Router();
@@ -47,16 +47,14 @@ router.patch("/", patchUsers);
 router.delete("/:id", [
     validateJWT,
     validateRole('ADMIN_ROLE', 'VENTAS_ROLE'),
-    check("id").custom(validatorStateUser),
     check('id', 'Id is not valid').isMongoId(),
     check("id").custom(validatorIdDB),
     validateFields
 ], deleteUsers);
 
-router.all("*", (req, res) => {
-    res.json({
-        message: '404 | Not found'
-    })
-});
+router.all("*", (req, res) => res.status(404).json({
+    error: '404 - Not found'
+}));
+
 
 module.exports = router;

@@ -1,6 +1,4 @@
-const RoleModel = require("../models/db-role");
-const UserModel = require("../models/db-user");
-
+const { CategoryModel, RoleModel, UserModel, ProductModel } = require("../models");
 
 const validatorRoleDB = async (role = '') => {
     const existRole = await RoleModel.findOne({ role });
@@ -20,18 +18,34 @@ const validatorIdDB = async (id) => {
 
     if (!existsUser) throw new Error(`User not exists`);
 
+    if (!existsUser.state) throw new Error(`User inactive - state:false`);
 }
 
-const validatorStateUser = async (id) => {
-    const existsUser = await UserModel.findById(id);
-    if (!existsUser.state) throw new Error(`User already inactive - state:false`);
+const validateCategory = async (id) => {
+    const existsCategory = await CategoryModel.findById(id);
 
+    if (!existsCategory) throw new Error(`Category not exists`);
+
+    if (!existsCategory.status) throw new Error(`Category inactive - status:false`);
 
 }
+
+const validateProduct = async (id) => {
+    const existsProduct = await ProductModel.findById(id);
+
+    if (!existsProduct) throw new Error(`Product not exists`);
+
+    if (!existsProduct.status) throw new Error(`Product inactive - status:false`);
+
+    // if (!existsProduct.available) throw new Error(`Product out stock! - available:false`);
+}
+
+
 
 module.exports = {
     validatorRoleDB,
     validatorEmailDB,
     validatorIdDB,
-    validatorStateUser
+    validateCategory,
+    validateProduct
 }

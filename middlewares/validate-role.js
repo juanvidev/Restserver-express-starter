@@ -2,14 +2,14 @@
 const validateRoleAdmin = (req, res, next) => {
     if (!req.userLogged) return res.status(401)
         .json({
-            messgae: `Token verify is required - role validation`
+            message: `Token verify is required - role validation`
         })
 
-    const { userLogged } = req.userLogged;
+    const userLogged = req.userLogged;
 
-    if (!roles.includes(userLogged.role)) return res.status(401)
+    if (userLogged.role !== 'ADMIN_ROLE') return res.status(401)
         .json({
-            messgae: `You dont have permission - you role is ${userLogged.role}`
+            message: `You dont have permission - you role is ${userLogged.role}`
         })
     next();
 }
@@ -20,14 +20,14 @@ const validateRole = (...roles) => {
 
         if (!req.userLogged) return res.status(401)
             .json({
-                messgae: `Token verify is required - role validation`
+                message: `Token verify is required - role validation`
             })
 
-        const { userLogged } = req.userLogged;
+        const userLogged = req.userLogged;
 
-        if (!roles.includes(userLogged.role)) return res.status(401)
+        if (!roles.includes(userLogged?.role)) return res.status(401)
             .json({
-                messgae: `You dont have permission - you role is ${userLogged.role}`
+                message: `You dont have permission - you role is ${userLogged.role}`
             })
 
         next();

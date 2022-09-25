@@ -8,7 +8,7 @@ const getUsers = async (req, res = response) => {
     const limitFormat = Number(limit);
     const sinceFormat = Number(since);
     const query = { state: true };
-    const payload = req.payload;
+    const userLogged = req.userLogged;
 
     if (!limitFormat && !sinceFormat) return res.status(400)
         .json({
@@ -25,7 +25,7 @@ const getUsers = async (req, res = response) => {
 
         ])
 
-        res.json({ countUsers, users, payload });
+        res.json({ countUsers, users });
 
     } catch (error) {
         res.status(500).json({ err: error.message });
@@ -37,14 +37,14 @@ const postUsers = async (req, res = response) => {
 
     const { name, email, password, role } = req.body;
     const user = new UserModel({ name, email, password, role });
-    const payload = req.payload;
+    const userLogged = req.userLogged;
 
     user.password = Encrypt(password);
 
     try {
         await user.save();
 
-        res.json({ user, payload });
+        res.status(201).json(user);
 
     } catch (error) {
         console.log(error);
@@ -57,15 +57,15 @@ const postUsers = async (req, res = response) => {
 const putUsers = async (req, res = response) => {
     const { id } = req.params;
     const { _id, google, password, email, ...restUser } = req.body;
-    const payload = req.payload;
+    const userLogged = req.userLogged;
 
     if (password) {
         restUser.password = Encrypt(password);
     }
 
     try {
-        const userUpdated = await UserModel.findByIdAndUpdate(id, restUser);
-        res.json({ userUpdated, payload });
+        const userUpdated = await UserModel.findByIdAndUpdate(id, restUser, { new: true });
+        res.json(userUpdated);
 
     } catch (error) {
         console.log(error);
@@ -87,13 +87,15 @@ const patchUsers = (req, res = response) => {
 const deleteUsers = async (req, res = response) => {
 
     const { id } = req.params;
-    const { userLogged, payload } = req.userLogged;
+    const userLogged = req.userLogged;
 
     try {
 
-        const userToDelete = await UserModel.findByIdAndUpdate(id, { state: false });
+        const userToDelete = await UserModel.findByIdAndUpdate(id, { state: false }, { new: true });
 
-        res.json({ userToDelete, userLogged, payload });
+        userToDelete.status = false;
+
+        res.json(userToDelete);
 
     } catch (error) {
         console.log(error);
