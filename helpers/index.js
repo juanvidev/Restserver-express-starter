@@ -4,7 +4,6 @@ const formatDate = require('./format-date');
 const googleVerify = require('./google-verify');
 const uploadFileHelper = require('./upload-file');
 const jwtGenerate = require('./jwt-generate');
-const fakerDatabase = require('./faker-database');
 
 module.exports = {
     ...dbValidators,
@@ -13,5 +12,4 @@ module.exports = {
     ...googleVerify,
     ...uploadFileHelper,
     ...jwtGenerate,
-    ...fakerDatabase,
 }
