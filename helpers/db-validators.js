@@ -40,12 +40,17 @@ const validateProduct = async (id) => {
     // if (!existsProduct.available) throw new Error(`Product out stock! - available:false`);
 }
 
-
+const collectionsAvailables = (collection = '', collectionsArr = []) => {
+    if (!collectionsArr.includes(collection))
+        throw new Error('Collection dont exist');
+    return true;
+}
 
 module.exports = {
     validatorRoleDB,
     validatorEmailDB,
     validatorIdDB,
     validateCategory,
-    validateProduct
+    validateProduct,
+    collectionsAvailables
 }
